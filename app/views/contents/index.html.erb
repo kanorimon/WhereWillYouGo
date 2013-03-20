@@ -1,0 +1,16 @@
+
+<label class='label'>住所</label>
+<input type='text' name='address' id='address' value='' />
+<button id='getad'>住所から取得</button>
+
+<div id="map" style="width: 600px; height: 400px;"></div> 
+
+<%= form_for @point, :url => {:controller => 'contents',:action => 'search'} do |f| %>
+  <%= f.hidden_field :lat %>
+  <%= f.hidden_field :lng %>
+  <%= f.text_field :radius %>
+  <%= button_tag(:type => 'submit', :class => 'btn btn-primary') do %>
+    <i class="icon-pencil icon-white"></i>
+  <% end %>
+<% end %>
+
