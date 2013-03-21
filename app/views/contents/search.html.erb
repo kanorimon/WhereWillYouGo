@@ -1,8 +1,8 @@
-
-
 <% @results.each do |i| %>
   <p>
     名前：<%= i['name'] %><br>
-    場所：<%= i['geometry'] %><br>
+    住所：<%= i['location']['address'] %><br>
+    lat：<%= i['location']['lat'] %><br>
+    lng：<%= i['location']['lng'] %><br>
   </p>
 <% end %>
