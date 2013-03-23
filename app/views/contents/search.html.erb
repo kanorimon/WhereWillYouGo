@@ -4,7 +4,7 @@
     
     var circleObj;
     //東京駅を中心に地図を表示。 
-    var myLatlng = new google.maps.LatLng(<%= @results[0]['geometry']['location']['lat'] %>, <%=  @results[0]['geometry']['location']['lng'] %>); 
+    var myLatlng = new google.maps.LatLng(<%= @lat_center %>, <%=  @lng_center %>); 
     var options = { 
         //地図のズームサイズ 
         zoom: 15, 
