@@ -5,7 +5,6 @@ class ContentsController < ApplicationController
   require 'net/https'
   
   def index
-    @point = Point.new()
   end
   
   def search
