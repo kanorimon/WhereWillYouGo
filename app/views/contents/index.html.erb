@@ -314,12 +314,12 @@
     <% if current_types && current_types.include?("train_station") %> 
   <label class="checkbox inline2"><%= check_box_tag 'check[]', "train_station", true %>駅</label>
     <% else %>
-  <label class="checkbox inline2"><%= check_box_tag 'check[]', "train_station", true %>駅</label>
+  <label class="checkbox inline2"><%= check_box_tag 'check[]', "train_station", false %>駅</label>
     <% end %> 
     <% if current_types && current_types.include?("subway_station") %> 
   <label class="checkbox inline2"><%= check_box_tag 'check[]', "subway_station", true %>地下鉄駅</label>
     <% else %>
-  <label class="checkbox inline2"><%= check_box_tag 'check[]', "subway_station", true %>地下鉄駅</label>
+  <label class="checkbox inline2"><%= check_box_tag 'check[]', "subway_station", false %>地下鉄駅</label>
     <% end %> 
     </div>
   </div>
