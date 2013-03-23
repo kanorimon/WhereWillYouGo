@@ -2,6 +2,7 @@
 class ContentsController < ApplicationController
   require 'open-uri'
   require 'json'
+  require 'net/https'
   
   def index
     @point = Point.new()
@@ -50,17 +51,29 @@ class ContentsController < ApplicationController
     logger.debug("************************index-end")
 =end
 
-    baseurl = "https://maps.googleapis.com/maps/api/place/search/json?"
+    #baseurl = "https://maps.googleapis.com/maps/api/place/search/json?"
+    baseurl = "/maps/api/place/search/json?"
 
     #lat_s = params[:point][:lat].to_s  #緯度
     #lng_s = params[:point][:lng].to_s  #経度
     #radius_s = params[:point][:radius].to_s  #探索半径（m）
 
-    lat_f = params[:point][:lat].to_f  #緯度
-    lng_f = params[:point][:lng].to_f  #経度
-    radius_i = params[:point][:radius].to_i  #探索半径（m）
+    logger.debug(params[:check])
+    types = ""
+    params[:check].each do |ch|
+      if types.blank?
+        types += ch
+      else
+        types += "|" + ch
+      end
+      
+    end
 
-    type = "bar"  #対象
+    lat_f = params[:lat].to_f  #緯度
+    lng_f = params[:lng].to_f  #経度
+    radius_i = params[:radius].to_i  #探索半径（m）
+
+    type = types  #対象
     sensor = "false"  #場所センサー取得フラグ
     language = "ja"  #言語
     key = ENV['GOOGLE_API_KEY']  #APIキー
@@ -70,6 +83,7 @@ class ContentsController < ApplicationController
     radius_s = (radius_i/2).to_s
     
     @results = []
+    result_sum = []
     
     (0..4).each do |num|
       rnd_lat_s[num],rnd_lng_s[num] = randomLatlng(lat_f,lng_f,radius_i/2) 
@@ -77,11 +91,40 @@ class ContentsController < ApplicationController
       combine = baseurl + 'location=' + rnd_lat_s[num] + ',' + rnd_lng_s[num]  + '&' + 'radius=' + radius_s + '&' + "language=" + language + '&' + "types=" + type + '&' + "sensor=" + sensor +  '&' + "key=" + key
       url = combine
       logger.debug(url)
-      result = open(url) do |file|
+      
+      result = ""
+
+      Net::HTTP.version_1_2
+      https = Net::HTTP.new("maps.googleapis.com",443)
+ https.use_ssl = true
+https.verify_mode = OpenSSL::SSL::VERIFY_PEER
+https.verify_depth = 5
+https.start {
+
+      result = https.get(url) do |file|
         JSON.parse(file.read)
       end
+}
+
+       
+       
+
+      @result_rnd = result['results'][rand(result['results'].size)]
+
+      logger.debug(@result_rnd)
       
-      @results.push(result['results'][rand(result['results'].size)])
+      unless result_sum.blank?
+        while result_sum.include?(@result_rnd['id'])
+          @result_rnd = result['results'][rand(result['results'].size)]
+          logger.debug(@result_rnd)
+        end
+      end
+      
+      result_sum.push(@result_rnd['id'])
+      
+      logger.debug(result_sum)
+      
+      @results.push(@result_rnd)
     end
     
     @lat_center = lat_f

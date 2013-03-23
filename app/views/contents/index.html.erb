@@ -1,28 +1,36 @@
 
   <script type="text/javascript">
- function initialize() { 
-    
-    var circleObj;
+  function initialize() { 
+
+
     //東京駅を中心に地図を表示。 
     var myLatlng = new google.maps.LatLng(35.681382, 139.766084); 
     var options = { 
-        //地図のズームサイズ 
+       //地図のズームサイズ 
         zoom: 15, 
         //地図の中心地 
         center: myLatlng, 
-        mapTypeId: google.maps.MapTypeId.ROADMAP 
-    }; 
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
     var map = new google.maps.Map(document.getElementById("map"), options); 
+ 
+    var circleObj;
     
     //地図をクリックされた時のイベント 
     google.maps.event.addListener(map, 'idle', function(event) { 
       var mapcenter = map.getCenter();
-      document.getElementById("point_lng").value = mapcenter.lng();
-      document.getElementById("point_lat").value = mapcenter.lat();
+      document.getElementById("lng").value = mapcenter.lng();
+      document.getElementById("lat").value = mapcenter.lat();
 
-      input_radius = parseInt(document.getElementById("point_radius").value);
-        
-    if(circleObj){
+      input_radius = parseInt(document.getElementById("radius").value);
+      
+      drawCircle(input_radius);
+
+    })
+ 
+
+    function drawCircle(input_radius){
+  	 if(circleObj){
       circleObj.setMap(null);
      }
         //円を描く 
@@ -30,45 +38,33 @@
         map: map, 
         center: map.getCenter(),
         radius: input_radius, 
-        strokeColor: "#55555", 
+        strokeColor: "#5B7437", 
         strokeOpacity: 1, 
         strokeWeight: 1, 
-        fillColor: "#555555", 
-        fillOpacity: 0.1
+        fillColor: "#FAB951", 
+        fillOpacity: 0.2
     }; 
     circleObj = new google.maps.Circle(circleOptions); 
+  	
+  };
 
-
-    })
-    
-    
-    
-  $('#getad').click(function() {
- 
-    var sad = $('#address').val();
-    var geocoder = new google.maps.Geocoder();
- 
-    geocoder.geocode({ 'address': sad}, function(results, status) {
-      if (status == google.maps.GeocoderStatus.OK) {
- 
-        map.setCenter(results[0].geometry.location);
-        marker.setPosition(results[0].geometry.location);
- 
-        var p = marker.position;
-        $('#lat').val(p.lat());
-        $('#lng').val(p.lng());
-      } else {
-        alert('住所から場所を特定できませんでした。最初にビル名などを省略し、番地までの検索などでお試しください。');
+  	
+  $( "#slider-range-min" ).slider({
+      range: "min",
+      value: 1000,
+      min: 500,
+      max: 5000,
+      slide: function( event, ui ) {
+        $( "#radius" ).val(ui.value  + "m");
+        drawCircle(ui.value);
       }
     });
- 
-    return false;
- 
-  });
+   $( "#radius" ).val($( "#slider-range-min" ).slider( "value" ) + "m" );
 
 
   };
-  
+      
+
 
 
     </script>
@@ -77,18 +73,144 @@
 </head>
 <body onload="initialize()">
 	
-<label class='label'>住所</label>
-<input type='text' name='address' id='address' value='' />
-<button id='getad'>住所から取得</button>
+	
+    <div class="container-narrow">
 
-<div id="map" style="width: 600px; height: 400px;"></div> 
+      <div class="masthead text-center">
+        <%= image_tag('asudoko_logo.png') %>
+      </div>
 
-<%= form_for @point, :url => {:controller => 'contents',:action => 'search'} do |f| %>
-  <%= f.hidden_field :lat %>
-  <%= f.hidden_field :lng %>
-  <%= f.text_field :radius %>
+      <hr>
+
+      <div class="jumbotron">
+        <div id="map" style="width: 700px; height: 400px;"></div> 
+      </div>
+
+      <hr>
+
+      <div class="jumbotron">
+
+        <div class="">
+          	
+        <%= form_tag("contents/search", class: "form-horizontal") do %>
+  <%= hidden_field_tag :lat %>
+  <%= hidden_field_tag :lng %>
+  <div class="control-group">
+    <label class="control-label" for="inputEmail">範囲</label>
+    <div class="controls text-left">
+      <%= text_field_tag :radius %>
+      <div id="slider-range-min"></div>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <label class="control-label" for="inputEmail">遊ぶ／見る</label>
+    <div class="controls text-left">
+  <%= check_box_tag 'check[]', "park", true %> 公園
+  <%= check_box_tag 'check[]', "museum", true %> 美術館/博物館
+  <%= check_box_tag 'check[]', "art_gallery", true %>アート ギャラリー
+  <%= check_box_tag 'check[]', "aquarium", true %>水族館
+  <%= check_box_tag 'check[]', "zoo", true %>動物園
+  <%= check_box_tag 'check[]', "library", true %>図書館
+  <%= check_box_tag 'check[]', "amusement_park", true %>遊園地
+  <%= check_box_tag 'check[]', "bowling_alley", true %>ボウリング場
+  <%= check_box_tag 'check[]', "movie_theater", true %>映画館
+  <%= check_box_tag 'check[]', "spa", true %>温泉
+  <%= check_box_tag 'check[]', "stadium", true %>スタジアム
+
+    </div>
+  </div>
+
+  <div class="control-group">
+    <label class="control-label" for="inputEmail">買う</label>
+    <div class="controls text-left">
+  <%= check_box_tag 'check[]', "shopping_mall", true %>ショッピング モール
+  <%= check_box_tag 'check[]', "department_store", true %>百貨店
+  <%= check_box_tag 'check[]', "bicycle_store", true %>自転車店
+  <%= check_box_tag 'check[]', "food", true %>食料品店
+  <%= check_box_tag 'check[]', "bakery", true %>パン屋
+  <%= check_box_tag 'check[]', "clothing_store", true %>衣料品店
+  <%= check_box_tag 'check[]', "jewelry_store", true %>宝飾店
+  <%= check_box_tag 'check[]', "shoe_store", true %>靴屋
+  <%= check_box_tag 'check[]', "home_goods_store", true %>インテリア ショップ
+  <%= check_box_tag 'check[]', "electronics_store", true %>電器店
+  <%= check_box_tag 'check[]', "furniture_store", true %>家具店
+  <%= check_box_tag 'check[]', "book_store", true %>書店
+  <%= check_box_tag 'check[]', "florist", true %>花屋
+  <%= check_box_tag 'check[]', "pharmacy", true %>薬局
+  <%= check_box_tag 'check[]', "liquor_store", true %>酒店
+  <%= check_box_tag 'check[]', "grocery_or_supermarket", true %>スーパー
+  <%= check_box_tag 'check[]', "convenience_store", true %>コンビニエンス ストア
+    </div>
+  </div>
+
+  <div class="control-group">
+    <label class="control-label" for="inputEmail">食べる</label>
+    <div class="controls text-left">
+  <%= check_box_tag 'check[]', "cafe", true %>カフェ
+  <%= check_box_tag 'check[]', "restaurant", true %>レストラン
+  <%= check_box_tag 'check[]', "bar", true %>居酒屋
+  <%= check_box_tag 'check[]', "night_club", true %>ナイト クラブ
+    </div>
+  </div>
+  
+    <div class="control-group">
+    <label class="control-label" for="inputEmail">立ち寄る</label>
+    <div class="controls text-left">
+  <%= check_box_tag 'check[]', "school", true %>学校
+  <%= check_box_tag 'check[]', "university", true %>大学
+  <%= check_box_tag 'check[]', "post_office", true %>郵便局
+  <%= check_box_tag 'check[]', "embassy", true %>大使館
+  <%= check_box_tag 'check[]', "church", true %>教会
+    </div>
+  </div>
+  
+    <div class="control-group">
+    <label class="control-label" for="inputEmail">行く</label>
+    <div class="controls text-left">
+  <%= check_box_tag 'check[]', "train_station", true %>駅
+  <%= check_box_tag 'check[]', "subway_station", true %>地下鉄駅
+    </div>
+  </div>
+  
   <%= button_tag(:type => 'submit', :class => 'btn btn-primary') do %>
-    <i class="icon-pencil icon-white"></i>
+     <i class="icon-search icon-white"></i>
   <% end %>
-<% end %>
+          
+ <% end %>
+</div>
+        
+      </div>
 
+      <hr>
+
+      <div class="footer">
+        <p>&copy; kanorimon 2013</p>
+      </div>
+
+    </div> <!-- /container -->
+
+	
+	
+	
+	
+  <div class="container">
+  	<div class="row">
+      <div class="span12 text-center">
+
+      </div>
+    </div>
+    
+  	<div class="row">
+      <div class="span12 text-center">
+
+      </div>
+    </div>
+    
+  	<div class="row">
+      <div class="span12 text-center">
+
+
+      </div>
+    </div>
+  </div>

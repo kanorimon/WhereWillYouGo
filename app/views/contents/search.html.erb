@@ -2,7 +2,14 @@
   <script type="text/javascript">
  function initialize() { 
     
-    var circleObj;
+    var directionsDisplay = new google.maps.DirectionsRenderer(); //　ルート案内
+    var directionsService = new google.maps.DirectionsService(); // 地図表示用
+
+    directionsDisplay.setOptions(
+     {
+       suppressMarkers: true
+     });
+ 
     //東京駅を中心に地図を表示。 
     var myLatlng = new google.maps.LatLng(<%= @lat_center %>, <%=  @lng_center %>); 
     var options = { 
@@ -13,14 +20,45 @@
         mapTypeId: google.maps.MapTypeId.ROADMAP 
     }; 
     var map = new google.maps.Map(document.getElementById("map"), options); 
+
     
-    
+    //マーカー表示 
+    var myMarker = new google.maps.Marker({
+      position: new google.maps.LatLng(<%= @lat_center %> ,<%= @lng_center %>),
+      map: map
+    });
+
     <% @results.each do |i| %>
     var myMarker = new google.maps.Marker({
       position: new google.maps.LatLng(<%= i['geometry']['location']['lat'] %> ,<%= i['geometry']['location']['lng'] %>),
       map: map
     });
-<% end %>
+    <% end %>
+
+
+    
+    directionsDisplay.setMap(map);
+ 
+    var start = new google.maps.LatLng(<%= @lat_center %> , <%= @lng_center %> );
+    var end = new google.maps.LatLng(<%= @lat_center %> , <%= @lng_center %> );
+    var request = {
+    origin:start, // 出発地
+    destination:end, // 目的地
+	waypoints:[
+	{location:new google.maps.LatLng(<%= @results[0]['geometry']['location']['lat'] %> , <%= @results[0]['geometry']['location']['lng'] %> )},
+	{location:new google.maps.LatLng(<%= @results[1]['geometry']['location']['lat'] %> , <%= @results[1]['geometry']['location']['lng'] %> )},
+	{location:new google.maps.LatLng(<%= @results[2]['geometry']['location']['lat'] %> , <%= @results[2]['geometry']['location']['lng'] %> )},
+	{location:new google.maps.LatLng(<%= @results[3]['geometry']['location']['lat'] %> , <%= @results[3]['geometry']['location']['lng'] %> )},
+	{location:new google.maps.LatLng(<%= @results[4]['geometry']['location']['lat'] %> , <%= @results[4]['geometry']['location']['lng'] %> )},
+	], //　途中経路
+    travelMode: google.maps.DirectionsTravelMode.WALKING // 車で
+    };
+    directionsService.route(request, function(response, status) {
+      if (status == google.maps.DirectionsStatus.OK) {
+      directionsDisplay.setDirections(response); // 描画
+      }
+    });
+    
   };
   
 
@@ -36,8 +74,9 @@
   <p>
     No：<%= k %><br>
     名前：<%= i['name'] %><br>
-    住所：<%= i['formatted_address'] %><br>
+    住所：<%= i['vicinity'] %><br>
     lat：<%= i['geometry']['location']['lat'] %><br>
     lng：<%= i['geometry']['location']['lng'] %><br>
   </p>
 <% end %>
+
