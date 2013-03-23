@@ -3,8 +3,12 @@
   function initialize() { 
 
 
-    //東京駅を中心に地図を表示。 
+    //東京駅を中心に地図を表示。
+    <% if current_lat && current_lng %> 
+    var myLatlng = new google.maps.LatLng(<%= current_lat %>, <%= current_lng %>); 
+    <% else %> 
     var myLatlng = new google.maps.LatLng(35.681382, 139.766084); 
+    <% end %> 
     var options = { 
        //地図のズームサイズ 
         zoom: 15, 
@@ -51,7 +55,11 @@
   	
   $( "#slider-range-min" ).slider({
       range: "min",
+    <% if current_radius %> 
+      value: <%= current_radius %>,
+    <% else %> 
       value: 1000,
+    <% end %> 
       min: 500,
       max: 5000,
       slide: function( event, ui ) {
@@ -98,7 +106,7 @@
   <div class="control-group">
     <label class="control-label" for="inputEmail">範囲</label>
     <div class="controls text-left">
-      <%= text_field_tag :radius %>
+      <%= text_field_tag 'radius', nil, :class => 'input-mini uneditable-input' %>
       <div id="slider-range-min"></div>
     </div>
   </div>
@@ -106,17 +114,63 @@
   <div class="control-group">
     <label class="control-label" for="inputEmail">遊ぶ／見る</label>
     <div class="controls text-left check">
+
+    <% if current_types && current_types.include?("park") %> 
 <label class="checkbox inline2"><%= check_box_tag 'check[]', "park", true %>公園</label>
+    <% else %>
+<label class="checkbox inline2"><%= check_box_tag 'check[]', "park", false %>公園</label>
+    <% end %> 
+    <% if current_types && current_types.include?("museum") %> 
 <label class="checkbox inline2"><%= check_box_tag 'check[]', "museum", true %>ミュージアム</label>
+    <% else %>
+<label class="checkbox inline2"><%= check_box_tag 'check[]', "museum", false %>ミュージアム</label>
+    <% end %> 
+    <% if current_types && current_types.include?("art_gallery") %> 
 <label class="checkbox inline2"><%= check_box_tag 'check[]', "art_gallery", true %>ギャラリー</label>
+    <% else %>
+<label class="checkbox inline2"><%= check_box_tag 'check[]', "art_gallery", false %>ギャラリー</label>
+    <% end %> 
+    <% if current_types && current_types.include?("library") %> 
 <label class="checkbox inline2"><%= check_box_tag 'check[]', "library", true %>図書館</label><br />
+    <% else %>
+<label class="checkbox inline2"><%= check_box_tag 'check[]', "library", false %>図書館</label><br />
+    <% end %> 
+    <% if current_types && current_types.include?("aquarium") %> 
 <label class="checkbox inline2"><%= check_box_tag 'check[]', "aquarium", true %>水族館</label>
+    <% else %>
+<label class="checkbox inline2"><%= check_box_tag 'check[]', "aquarium", false %>水族館</label>
+    <% end %> 
+    <% if current_types && current_types.include?("zoo") %> 
 <label class="checkbox inline2"><%= check_box_tag 'check[]', "zoo", true %>動物園</label>
+    <% else %>
+<label class="checkbox inline2"><%= check_box_tag 'check[]', "zoo", false %>動物園</label>
+    <% end %> 
+    <% if current_types && current_types.include?("amusement_park") %> 
 <label class="checkbox inline2"><%= check_box_tag 'check[]', "amusement_park", true %>遊園地</label>
+    <% else %>
+<label class="checkbox inline2"><%= check_box_tag 'check[]', "amusement_park", false %>遊園地</label>
+    <% end %> 
+    <% if current_types && current_types.include?("bowling_alley") %> 
 <label class="checkbox inline2"><%= check_box_tag 'check[]', "bowling_alley", true %>ボウリング場</label><br />
+    <% else %>
+<label class="checkbox inline2"><%= check_box_tag 'check[]', "bowling_alley", false %>ボウリング場</label><br />
+    <% end %> 
+    <% if current_types && current_types.include?("movie_theater") %> 
 <label class="checkbox inline2"><%= check_box_tag 'check[]', "movie_theater", true %>映画館</label>
+    <% else %>
+<label class="checkbox inline2"><%= check_box_tag 'check[]', "movie_theater", false %>映画館</label>
+    <% end %> 
+    <% if current_types && current_types.include?("spa") %> 
 <label class="checkbox inline2"><%= check_box_tag 'check[]', "spa", true %>温泉</label>
+    <% else %>
+<label class="checkbox inline2"><%= check_box_tag 'check[]', "spa", false %>温泉</label>
+    <% end %> 
+    <% if current_types && current_types.include?("stadium") %> 
 <label class="checkbox inline2"><%= check_box_tag 'check[]', "stadium", true %>スタジアム</label>
+    <% else %>
+<label class="checkbox inline2"><%= check_box_tag 'check[]', "stadium", false %>スタジアム</label>
+    <% end %> 
+ 
 
     </div>
   </div>
@@ -124,49 +178,149 @@
   <div class="control-group">
     <label class="control-label" for="inputEmail">買う</label>
     <div class="controls text-left">
+    <% if current_types && current_types.include?("bicycle_store") %> 
   <label class="checkbox inline2"><%= check_box_tag 'check[]', "bicycle_store", true %>自転車店</label>
+    <% else %>
+  <label class="checkbox inline2"><%= check_box_tag 'check[]', "bicycle_store", false %>自転車店</label>
+    <% end %> 
+    <% if current_types && current_types.include?("food") %> 
   <label class="checkbox inline2"><%= check_box_tag 'check[]', "food", true %>食料品店</label>
+    <% else %>
+  <label class="checkbox inline2"><%= check_box_tag 'check[]', "food", false %>食料品店</label>
+    <% end %> 
+    <% if current_types && current_types.include?("bakery") %> 
   <label class="checkbox inline2"><%= check_box_tag 'check[]', "bakery", true %>パン屋</label>
+    <% else %>
+  <label class="checkbox inline2"><%= check_box_tag 'check[]', "bakery", false %>パン屋</label>
+    <% end %> 
+    <% if current_types && current_types.include?("clothing_store") %> 
   <label class="checkbox inline2"><%= check_box_tag 'check[]', "clothing_store", true %>衣料品店</label><br />
+    <% else %>
+  <label class="checkbox inline2"><%= check_box_tag 'check[]', "clothing_store", false %>衣料品店</label><br />
+    <% end %> 
+    <% if current_types && current_types.include?("jewelry_store") %> 
   <label class="checkbox inline2"><%= check_box_tag 'check[]', "jewelry_store", true %>宝飾店</label>
+    <% else %>
+  <label class="checkbox inline2"><%= check_box_tag 'check[]', "jewelry_store", false %>宝飾店</label>
+    <% end %> 
+    <% if current_types && current_types.include?("shoe_store") %> 
   <label class="checkbox inline2"><%= check_box_tag 'check[]', "shoe_store", true %>靴屋</label>
+    <% else %>
+  <label class="checkbox inline2"><%= check_box_tag 'check[]', "shoe_store", false %>靴屋</label>
+    <% end %> 
+    <% if current_types && current_types.include?("home_goods_store") %> 
   <label class="checkbox inline2"><%= check_box_tag 'check[]', "home_goods_store", true %>インテリア</label>
+    <% else %>
+  <label class="checkbox inline2"><%= check_box_tag 'check[]', "home_goods_store", false %>インテリア</label>
+    <% end %> 
+    <% if current_types && current_types.include?("electronics_store") %> 
   <label class="checkbox inline2"><%= check_box_tag 'check[]', "electronics_store", true %>電器店</label><br />
+    <% else %>
+  <label class="checkbox inline2"><%= check_box_tag 'check[]', "electronics_store", false %>電器店</label><br />
+    <% end %> 
+    <% if current_types && current_types.include?("book_store") %> 
   <label class="checkbox inline2"><%= check_box_tag 'check[]', "book_store", true %>書店</label>
+    <% else %>
+  <label class="checkbox inline2"><%= check_box_tag 'check[]', "book_store", false %>書店</label>
+    <% end %> 
+    <% if current_types && current_types.include?("florist") %> 
   <label class="checkbox inline2"><%= check_box_tag 'check[]', "florist", true %>花屋</label>
+    <% else %>
+  <label class="checkbox inline2"><%= check_box_tag 'check[]', "florist", false %>花屋</label>
+    <% end %> 
+    <% if current_types && current_types.include?("pharmacy") %> 
   <label class="checkbox inline2"><%= check_box_tag 'check[]', "pharmacy", true %>薬局</label>
+    <% else %>
+  <label class="checkbox inline2"><%= check_box_tag 'check[]', "pharmacy", false %>薬局</label>
+    <% end %> 
+    <% if current_types && current_types.include?("liquor_store") %> 
   <label class="checkbox inline2"><%= check_box_tag 'check[]', "liquor_store", true %>酒店</label><br />
+    <% else %>
+  <label class="checkbox inline2"><%= check_box_tag 'check[]', "liquor_store", false %>酒店</label><br />
+    <% end %> 
+    <% if current_types && current_types.include?("shopping_mall") %> 
   <label class="checkbox inline2"><%= check_box_tag 'check[]', "shopping_mall", true %>モール</label>
+    <% else %>
+  <label class="checkbox inline2"><%= check_box_tag 'check[]', "shopping_mall", false %>モール</label>
+    <% end %> 
+    <% if current_types && current_types.include?("department_store") %> 
   <label class="checkbox inline2"><%= check_box_tag 'check[]', "department_store", true %>百貨店</label>
+    <% else %>
+  <label class="checkbox inline2"><%= check_box_tag 'check[]', "department_store", false %>百貨店</label>
+    <% end %> 
+    <% if current_types && current_types.include?("grocery_or_supermarket") %> 
   <label class="checkbox inline2"><%= check_box_tag 'check[]', "grocery_or_supermarket", true %>スーパー</label>
+    <% else %>
+  <label class="checkbox inline2"><%= check_box_tag 'check[]', "grocery_or_supermarket", false %>スーパー</label>
+    <% end %> 
+    <% if current_types && current_types.include?("convenience_store") %> 
   <label class="checkbox inline2"><%= check_box_tag 'check[]', "convenience_store", true %>コンビニ</label>
+    <% else %>
+  <label class="checkbox inline2"><%= check_box_tag 'check[]', "convenience_store", false %>コンビニ</label>
+    <% end %> 
     </div>
   </div>
 
   <div class="control-group">
     <label class="control-label" for="inputEmail">食べる</label>
     <div class="controls text-left">
+    <% if current_types && current_types.include?("cafe") %> 
   <label class="checkbox inline2"><%= check_box_tag 'check[]', "cafe", true %>カフェ</label>
+    <% else %>
+  <label class="checkbox inline2"><%= check_box_tag 'check[]', "cafe", false %>カフェ</label>
+    <% end %> 
+    <% if current_types && current_types.include?("restaurant") %> 
   <label class="checkbox inline2"><%= check_box_tag 'check[]', "restaurant", true %>レストラン</label>
+    <% else %>
+  <label class="checkbox inline2"><%= check_box_tag 'check[]', "restaurant", false %>レストラン</label>
+    <% end %> 
+    <% if current_types && current_types.include?("bar") %> 
   <label class="checkbox inline2"><%= check_box_tag 'check[]', "bar", true %>居酒屋</label>
+    <% else %>
+  <label class="checkbox inline2"><%= check_box_tag 'check[]', "bar", false %>居酒屋</label>
+    <% end %> 
+    <% if current_types && current_types.include?("night_club") %> 
   <label class="checkbox inline2"><%= check_box_tag 'check[]', "night_club", true %>ナイトクラブ</label>
+    <% else %>
+  <label class="checkbox inline2"><%= check_box_tag 'check[]', "night_club", false %>ナイトクラブ</label>
+    <% end %> 
     </div>
   </div>
   
     <div class="control-group">
     <label class="control-label" for="inputEmail">立ち寄る</label>
     <div class="controls text-left">
+    <% if current_types && current_types.include?("school") %> 
   <label class="checkbox inline2"><%= check_box_tag 'check[]', "school", true %>学校</label>
+    <% else %>
+  <label class="checkbox inline2"><%= check_box_tag 'check[]', "school", false %>学校</label>
+    <% end %> 
+    <% if current_types && current_types.include?("university") %> 
   <label class="checkbox inline2"><%= check_box_tag 'check[]', "university", true %>大学</label>
+    <% else %>
+  <label class="checkbox inline2"><%= check_box_tag 'check[]', "university", false %>大学</label>
+    <% end %> 
+    <% if current_types && current_types.include?("post_office") %> 
   <label class="checkbox inline2"><%= check_box_tag 'check[]', "post_office", true %>郵便局</label>
+    <% else %>
+  <label class="checkbox inline2"><%= check_box_tag 'check[]', "post_office", false %>郵便局</label>
+    <% end %> 
     </div>
   </div>
   
     <div class="control-group">
     <label class="control-label" for="inputEmail">行く</label>
     <div class="controls text-left">
+    <% if current_types && current_types.include?("train_station") %> 
   <label class="checkbox inline2"><%= check_box_tag 'check[]', "train_station", true %>駅</label>
+    <% else %>
+  <label class="checkbox inline2"><%= check_box_tag 'check[]', "train_station", true %>駅</label>
+    <% end %> 
+    <% if current_types && current_types.include?("subway_station") %> 
   <label class="checkbox inline2"><%= check_box_tag 'check[]', "subway_station", true %>地下鉄駅</label>
+    <% else %>
+  <label class="checkbox inline2"><%= check_box_tag 'check[]', "subway_station", true %>地下鉄駅</label>
+    <% end %> 
     </div>
   </div>
   

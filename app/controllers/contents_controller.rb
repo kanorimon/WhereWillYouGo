@@ -10,53 +10,12 @@ class ContentsController < ApplicationController
   
   def search
 
-=begin
-    baseurl = "https://api.foursquare.com/v2/venues/search?"
-    lat = params[:point][:lat].to_s  #緯度
-    lng = params[:point][:lng].to_s  #経度
-    radius = params[:point][:radius].to_s  #探索半径（m）
-    #type = "bar"  #対象
-    sensor = "false"  #場所センサー取得フラグ
-    client_secret = ENV['FOURSQUARE_CLIENT_SECRET']  #APIキー
-    client_id = ENV['FOURSQUARE_CLIENT_ID']  #APIキー
-    
-    logger.debug(params[:point][:lat].to_s)
-    logger.debug(params[:point][:lng].to_s)
-    logger.debug(params[:point][:radius].to_s)
-    logger.debug(client_secret)
-    logger.debug(client_id)
-    
-
-    #combine = baseurl + 'location=' + lat + ',' + lng  + '&' + 'radius=' + radius + '&' + "types=" + type + '&' + "sensor=" + sensor +  '&' + "key=" + key
-    combine = baseurl + 'll=' + lat + ',' + lng  + '&' + 'radius=' + radius + '&' + 'client_secret=' + client_secret + '&' + 'client_id=' + client_id
-
-
-    url = combine
-
-    logger.debug(url)
-
-    result = open(url) do |file|
-      JSON.parse(file.read)
-    end
-
-    #logger.debug(result)
-
-    logger.debug(result)    
-    @results = result["response"]["groups"][0]["items"]
-    logger.debug(@results)
-    
-    logger.debug(@results.length)
-    
-
-    logger.debug("************************index-end")
-=end
-
-    #baseurl = "https://maps.googleapis.com/maps/api/place/search/json?"
     baseurl = "/maps/api/place/search/json?"
 
-    #lat_s = params[:point][:lat].to_s  #緯度
-    #lng_s = params[:point][:lng].to_s  #経度
-    #radius_s = params[:point][:radius].to_s  #探索半径（m）
+    session[:current_lat] = params[:lat].to_f
+    session[:current_lng] = params[:lng].to_f
+    session[:current_radius] = params[:radius].to_i
+    session[:current_types] = params[:check]
 
     logger.debug(params[:check])
     types = ""
@@ -102,16 +61,19 @@ https.start {
         response = https.get(url)
         logger.debug(response.body)
 }
-        result = JSON.parse(response.body)
+      result = JSON.parse(response.body)
        
+     unless result['results'].blank?
       @result_rnd = result['results'][rand(result['results'].size)]
 
       logger.debug(@result_rnd)
       
       unless result_sum.blank?
-        while result_sum.include?(@result_rnd['id'])
+         chk = 0
+        while result_sum.include?(@result_rnd['id']) && chk < 5
           @result_rnd = result['results'][rand(result['results'].size)]
           logger.debug(@result_rnd)
+          chk += 1
         end
       end
       
@@ -120,6 +82,8 @@ https.start {
       logger.debug(result_sum)
       
       @results.push(@result_rnd)
+      
+      end
     end
     
     @lat_center = lat_f

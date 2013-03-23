@@ -25,13 +25,20 @@
     //マーカー表示 
     var myMarker = new google.maps.Marker({
       position: new google.maps.LatLng(<%= @lat_center %> ,<%= @lng_center %>),
-      map: map
+      title: "スタート/ゴール",
+      map: map,
+      icon: new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld="+ ("S") + "|5B7437|000000"),
+      shadow: new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_shadow",null,null, new google.maps.Point(12, 35) )
     });
 
-    <% @results.each do |i| %>
+    <% @results.each_with_index do |i,k| %>
     var myMarker = new google.maps.Marker({
       position: new google.maps.LatLng(<%= i['geometry']['location']['lat'] %> ,<%= i['geometry']['location']['lng'] %>),
-      map: map
+      title: "<%= i['name'] %>",
+      map: map,
+      icon: new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld="+ (<%= k+1 %>) + "|FAB951|000000"),
+      shadow: new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_shadow",null,null, new google.maps.Point(12, 35) )
+
     });
     <% end %>
 
@@ -45,11 +52,9 @@
     origin:start, // 出発地
     destination:end, // 目的地
 	waypoints:[
-	{location:new google.maps.LatLng(<%= @results[0]['geometry']['location']['lat'] %> , <%= @results[0]['geometry']['location']['lng'] %> )},
-	{location:new google.maps.LatLng(<%= @results[1]['geometry']['location']['lat'] %> , <%= @results[1]['geometry']['location']['lng'] %> )},
-	{location:new google.maps.LatLng(<%= @results[2]['geometry']['location']['lat'] %> , <%= @results[2]['geometry']['location']['lng'] %> )},
-	{location:new google.maps.LatLng(<%= @results[3]['geometry']['location']['lat'] %> , <%= @results[3]['geometry']['location']['lng'] %> )},
-	{location:new google.maps.LatLng(<%= @results[4]['geometry']['location']['lat'] %> , <%= @results[4]['geometry']['location']['lng'] %> )},
+    <% @results.each do |i| %>
+     	{location:new google.maps.LatLng(<%= i['geometry']['location']['lat'] %> , <%= i['geometry']['location']['lng'] %> )},
+    <% end %>
 	], //　途中経路
     travelMode: google.maps.DirectionsTravelMode.WALKING // 車で
     };
@@ -84,17 +89,31 @@
       <hr>
 
       <div class="jumbotron">
-
-
+<table class="table">
+  <thead>
+    <tr>
+      <th>No.</th>
+      <th>名前</th>
+      <th>住所</th>
+    </tr>
+  </thead>
+  <tbody>
+  
 <% @results.each_with_index do |i,k| %>
-  <p>
-    No：<%= k %><br>
-    名前：<%= i['name'] %><br>
-    住所：<%= i['vicinity'] %><br>
-    lat：<%= i['geometry']['location']['lat'] %><br>
-    lng：<%= i['geometry']['location']['lng'] %><br>
-  </p>
+  <% if k%2 == 0 %>
+    <tr class="success">
+  <% else %>
+    <tr class="warning">
+  <% end %>
+    <td><%= k + 1 %></td>
+    <td><%= i['name'] %></td>
+    <td><%= i['vicinity'] %></td>
+  </tr>
 <% end %>
+  </tbody>
+</table>
+
+<a class="btn btn-large btn-warning" href="<%= root_url(:only_path => false) %>">戻る</a>
 
       </div>
 

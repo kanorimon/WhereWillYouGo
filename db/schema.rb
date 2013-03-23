@@ -11,14 +11,6 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130320081943) do
-
-  create_table "points", force: true do |t|
-    t.float    "lat"
-    t.float    "lng"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "radius"
-  end
+ActiveRecord::Schema.define(version: 20130323135738) do
 
 end
