@@ -30,10 +30,6 @@ html {
         font-size: 72px;
         line-height: 1;
       }
-      .jumbotron .btn {
-        font-size: 21px;
-        padding: 14px 24px;
-      }
 
       /* Supporting marketing content */
       .marketing {
@@ -42,3 +38,16 @@ html {
       .marketing p + h4 {
         margin-top: 28px;
       }
+      
+.checkbox.inline2 {
+  display: inline-block;
+  width:6em;
+  padding-top: 5px;
+  margin-bottom: 0;
+  vertical-align: middle;
+  word-break:normal;
+}
+
+.checkbox.inline2 + .checkbox.inline2 {
+  margin-left: 10px;
+}

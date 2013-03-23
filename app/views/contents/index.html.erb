@@ -105,18 +105,18 @@
 
   <div class="control-group">
     <label class="control-label" for="inputEmail">遊ぶ／見る</label>
-    <div class="controls text-left">
-  <%= check_box_tag 'check[]', "park", true %> 公園
-  <%= check_box_tag 'check[]', "museum", true %> 美術館/博物館
-  <%= check_box_tag 'check[]', "art_gallery", true %>アート ギャラリー
-  <%= check_box_tag 'check[]', "aquarium", true %>水族館
-  <%= check_box_tag 'check[]', "zoo", true %>動物園
-  <%= check_box_tag 'check[]', "library", true %>図書館
-  <%= check_box_tag 'check[]', "amusement_park", true %>遊園地
-  <%= check_box_tag 'check[]', "bowling_alley", true %>ボウリング場
-  <%= check_box_tag 'check[]', "movie_theater", true %>映画館
-  <%= check_box_tag 'check[]', "spa", true %>温泉
-  <%= check_box_tag 'check[]', "stadium", true %>スタジアム
+    <div class="controls text-left check">
+<label class="checkbox inline2"><%= check_box_tag 'check[]', "park", true %>公園</label>
+<label class="checkbox inline2"><%= check_box_tag 'check[]', "museum", true %>ミュージアム</label>
+<label class="checkbox inline2"><%= check_box_tag 'check[]', "art_gallery", true %>ギャラリー</label>
+<label class="checkbox inline2"><%= check_box_tag 'check[]', "library", true %>図書館</label><br />
+<label class="checkbox inline2"><%= check_box_tag 'check[]', "aquarium", true %>水族館</label>
+<label class="checkbox inline2"><%= check_box_tag 'check[]', "zoo", true %>動物園</label>
+<label class="checkbox inline2"><%= check_box_tag 'check[]', "amusement_park", true %>遊園地</label>
+<label class="checkbox inline2"><%= check_box_tag 'check[]', "bowling_alley", true %>ボウリング場</label><br />
+<label class="checkbox inline2"><%= check_box_tag 'check[]', "movie_theater", true %>映画館</label>
+<label class="checkbox inline2"><%= check_box_tag 'check[]', "spa", true %>温泉</label>
+<label class="checkbox inline2"><%= check_box_tag 'check[]', "stadium", true %>スタジアム</label>
 
     </div>
   </div>
@@ -124,57 +124,54 @@
   <div class="control-group">
     <label class="control-label" for="inputEmail">買う</label>
     <div class="controls text-left">
-  <%= check_box_tag 'check[]', "shopping_mall", true %>ショッピング モール
-  <%= check_box_tag 'check[]', "department_store", true %>百貨店
-  <%= check_box_tag 'check[]', "bicycle_store", true %>自転車店
-  <%= check_box_tag 'check[]', "food", true %>食料品店
-  <%= check_box_tag 'check[]', "bakery", true %>パン屋
-  <%= check_box_tag 'check[]', "clothing_store", true %>衣料品店
-  <%= check_box_tag 'check[]', "jewelry_store", true %>宝飾店
-  <%= check_box_tag 'check[]', "shoe_store", true %>靴屋
-  <%= check_box_tag 'check[]', "home_goods_store", true %>インテリア ショップ
-  <%= check_box_tag 'check[]', "electronics_store", true %>電器店
-  <%= check_box_tag 'check[]', "furniture_store", true %>家具店
-  <%= check_box_tag 'check[]', "book_store", true %>書店
-  <%= check_box_tag 'check[]', "florist", true %>花屋
-  <%= check_box_tag 'check[]', "pharmacy", true %>薬局
-  <%= check_box_tag 'check[]', "liquor_store", true %>酒店
-  <%= check_box_tag 'check[]', "grocery_or_supermarket", true %>スーパー
-  <%= check_box_tag 'check[]', "convenience_store", true %>コンビニエンス ストア
+  <label class="checkbox inline2"><%= check_box_tag 'check[]', "bicycle_store", true %>自転車店</label>
+  <label class="checkbox inline2"><%= check_box_tag 'check[]', "food", true %>食料品店</label>
+  <label class="checkbox inline2"><%= check_box_tag 'check[]', "bakery", true %>パン屋</label>
+  <label class="checkbox inline2"><%= check_box_tag 'check[]', "clothing_store", true %>衣料品店</label><br />
+  <label class="checkbox inline2"><%= check_box_tag 'check[]', "jewelry_store", true %>宝飾店</label>
+  <label class="checkbox inline2"><%= check_box_tag 'check[]', "shoe_store", true %>靴屋</label>
+  <label class="checkbox inline2"><%= check_box_tag 'check[]', "home_goods_store", true %>インテリア</label>
+  <label class="checkbox inline2"><%= check_box_tag 'check[]', "electronics_store", true %>電器店</label><br />
+  <label class="checkbox inline2"><%= check_box_tag 'check[]', "book_store", true %>書店</label>
+  <label class="checkbox inline2"><%= check_box_tag 'check[]', "florist", true %>花屋</label>
+  <label class="checkbox inline2"><%= check_box_tag 'check[]', "pharmacy", true %>薬局</label>
+  <label class="checkbox inline2"><%= check_box_tag 'check[]', "liquor_store", true %>酒店</label><br />
+  <label class="checkbox inline2"><%= check_box_tag 'check[]', "shopping_mall", true %>モール</label>
+  <label class="checkbox inline2"><%= check_box_tag 'check[]', "department_store", true %>百貨店</label>
+  <label class="checkbox inline2"><%= check_box_tag 'check[]', "grocery_or_supermarket", true %>スーパー</label>
+  <label class="checkbox inline2"><%= check_box_tag 'check[]', "convenience_store", true %>コンビニ</label>
     </div>
   </div>
 
   <div class="control-group">
     <label class="control-label" for="inputEmail">食べる</label>
     <div class="controls text-left">
-  <%= check_box_tag 'check[]', "cafe", true %>カフェ
-  <%= check_box_tag 'check[]', "restaurant", true %>レストラン
-  <%= check_box_tag 'check[]', "bar", true %>居酒屋
-  <%= check_box_tag 'check[]', "night_club", true %>ナイト クラブ
+  <label class="checkbox inline2"><%= check_box_tag 'check[]', "cafe", true %>カフェ</label>
+  <label class="checkbox inline2"><%= check_box_tag 'check[]', "restaurant", true %>レストラン</label>
+  <label class="checkbox inline2"><%= check_box_tag 'check[]', "bar", true %>居酒屋</label>
+  <label class="checkbox inline2"><%= check_box_tag 'check[]', "night_club", true %>ナイトクラブ</label>
     </div>
   </div>
   
     <div class="control-group">
     <label class="control-label" for="inputEmail">立ち寄る</label>
     <div class="controls text-left">
-  <%= check_box_tag 'check[]', "school", true %>学校
-  <%= check_box_tag 'check[]', "university", true %>大学
-  <%= check_box_tag 'check[]', "post_office", true %>郵便局
-  <%= check_box_tag 'check[]', "embassy", true %>大使館
-  <%= check_box_tag 'check[]', "church", true %>教会
+  <label class="checkbox inline2"><%= check_box_tag 'check[]', "school", true %>学校</label>
+  <label class="checkbox inline2"><%= check_box_tag 'check[]', "university", true %>大学</label>
+  <label class="checkbox inline2"><%= check_box_tag 'check[]', "post_office", true %>郵便局</label>
     </div>
   </div>
   
     <div class="control-group">
     <label class="control-label" for="inputEmail">行く</label>
     <div class="controls text-left">
-  <%= check_box_tag 'check[]', "train_station", true %>駅
-  <%= check_box_tag 'check[]', "subway_station", true %>地下鉄駅
+  <label class="checkbox inline2"><%= check_box_tag 'check[]', "train_station", true %>駅</label>
+  <label class="checkbox inline2"><%= check_box_tag 'check[]', "subway_station", true %>地下鉄駅</label>
     </div>
   </div>
   
-  <%= button_tag(:type => 'submit', :class => 'btn btn-primary') do %>
-     <i class="icon-search icon-white"></i>
+  <%= button_tag(:type => 'submit', :class => 'btn btn-large btn-success') do %>
+明日どこ行く？
   <% end %>
           
  <% end %>

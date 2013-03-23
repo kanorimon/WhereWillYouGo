@@ -92,23 +92,18 @@ class ContentsController < ApplicationController
       url = combine
       logger.debug(url)
       
-      result = ""
-
+      response = ""
       Net::HTTP.version_1_2
       https = Net::HTTP.new("maps.googleapis.com",443)
  https.use_ssl = true
 https.verify_mode = OpenSSL::SSL::VERIFY_PEER
 https.verify_depth = 5
 https.start {
-
-      result = https.get(url) do |file|
-        JSON.parse(file.read)
-      end
+        response = https.get(url)
+        logger.debug(response.body)
 }
-
+        result = JSON.parse(response.body)
        
-       
-
       @result_rnd = result['results'][rand(result['results'].size)]
 
       logger.debug(@result_rnd)
