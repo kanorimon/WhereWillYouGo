@@ -1,8 +1,43 @@
-<% @results.each do |i| %>
+
+  <script type="text/javascript">
+ function initialize() { 
+    
+    var circleObj;
+    //東京駅を中心に地図を表示。 
+    var myLatlng = new google.maps.LatLng(<%= @results[0]['geometry']['location']['lat'] %>, <%=  @results[0]['geometry']['location']['lng'] %>); 
+    var options = { 
+        //地図のズームサイズ 
+        zoom: 15, 
+        //地図の中心地 
+        center: myLatlng, 
+        mapTypeId: google.maps.MapTypeId.ROADMAP 
+    }; 
+    var map = new google.maps.Map(document.getElementById("map"), options); 
+    
+    
+    <% @results.each do |i| %>
+    var myMarker = new google.maps.Marker({
+      position: new google.maps.LatLng(<%= i['geometry']['location']['lat'] %> ,<%= i['geometry']['location']['lng'] %>),
+      map: map
+    });
+<% end %>
+  };
+  
+
+
+    </script>
+    
+</head>
+<body onload="initialize()">
+	
+<div id="map" style="width: 600px; height: 400px;"></div> 
+
+<% @results.each_with_index do |i,k| %>
   <p>
+    No：<%= k %><br>
     名前：<%= i['name'] %><br>
-    住所：<%= i['location']['address'] %><br>
-    lat：<%= i['location']['lat'] %><br>
-    lng：<%= i['location']['lng'] %><br>
+    住所：<%= i['formatted_address'] %><br>
+    lat：<%= i['geometry']['location']['lat'] %><br>
+    lng：<%= i['geometry']['location']['lng'] %><br>
   </p>
 <% end %>
