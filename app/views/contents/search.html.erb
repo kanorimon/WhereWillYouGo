@@ -68,7 +68,23 @@
 </head>
 <body onload="initialize()">
 	
-<div id="map" style="width: 600px; height: 400px;"></div> 
+		
+    <div class="container-narrow">
+
+      <div class="masthead text-center">
+        <%= image_tag('asudoko_logo.png') %>
+      </div>
+
+      <hr>
+
+      <div class="jumbotron">
+        <div id="map" style="width: 700px; height: 400px;"></div> 
+      </div>
+
+      <hr>
+
+      <div class="jumbotron">
+
 
 <% @results.each_with_index do |i,k| %>
   <p>
@@ -80,3 +96,12 @@
   </p>
 <% end %>
 
+      </div>
+
+      <hr>
+
+      <div class="footer">
+        <p>&copy; kanorimon 2013</p>
+      </div>
+
+    </div> <!-- /container -->
