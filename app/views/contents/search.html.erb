@@ -1,30 +1,30 @@
-
-  <script type="text/javascript">
- function initialize() { 
+<script type="text/javascript">
+  function initialize() { 
     
     var directionsDisplay = new google.maps.DirectionsRenderer(); //　ルート案内
     var directionsService = new google.maps.DirectionsService(); // 地図表示用
 
+    //デフォルトピン非表示
     directionsDisplay.setOptions(
      {
        suppressMarkers: true
      });
  
-    //東京駅を中心に地図を表示。 
-    var myLatlng = new google.maps.LatLng(<%= @lat_center %>, <%=  @lng_center %>); 
+    //セッションの中心に地図を表示。 
+    var myLatlng = new google.maps.LatLng(<%= current_lat %>, <%=  current_lng %>); 
     var options = { 
-        //地図のズームサイズ 
-        zoom: 15, 
-        //地図の中心地 
-        center: myLatlng, 
-        mapTypeId: google.maps.MapTypeId.ROADMAP 
-    }; 
+      //地図のズームサイズ 
+      zoom: 15, 
+      //地図の中心地 
+      center: myLatlng, 
+      mapTypeId: google.maps.MapTypeId.ROADMAP 
+      }; 
+    //地図オブジェクトを作成
     var map = new google.maps.Map(document.getElementById("map"), options); 
-
     
     //マーカー表示 
     var myMarker = new google.maps.Marker({
-      position: new google.maps.LatLng(<%= @lat_center %> ,<%= @lng_center %>),
+      position: new google.maps.LatLng(<%= current_lat %> ,<%= current_lng %>),
       title: "スタート/ゴール",
       map: map,
       icon: new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld="+ ("S") + "|5B7437|000000"),
@@ -32,95 +32,113 @@
     });
 
     <% @results.each_with_index do |i,k| %>
-    var myMarker = new google.maps.Marker({
-      position: new google.maps.LatLng(<%= i['geometry']['location']['lat'] %> ,<%= i['geometry']['location']['lng'] %>),
-      title: "<%= i['name'] %>",
-      map: map,
-      icon: new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld="+ (<%= k+1 %>) + "|FAB951|000000"),
-      shadow: new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_shadow",null,null, new google.maps.Point(12, 35) )
-
-    });
+      var myMarker = new google.maps.Marker({
+        position: new google.maps.LatLng(<%= i['geometry']['location']['lat'] %> ,<%= i['geometry']['location']['lng'] %>),
+        title: "<%= i['name'] %>",
+        map: map,
+        icon: new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld="+ (<%= k+1 %>) + "|FAB951|000000"),
+        shadow: new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_shadow",null,null, new google.maps.Point(12, 35) )
+      });
     <% end %>
 
-
-    
     directionsDisplay.setMap(map);
  
-    var start = new google.maps.LatLng(<%= @lat_center %> , <%= @lng_center %> );
-    var end = new google.maps.LatLng(<%= @lat_center %> , <%= @lng_center %> );
+     //経路探索（徒歩）
+    var start = new google.maps.LatLng(<%= current_lat %> , <%= current_lng %> );
+    var end = new google.maps.LatLng(<%= current_lat %> , <%= current_lng %> );
     var request = {
-    origin:start, // 出発地
-    destination:end, // 目的地
-	waypoints:[
-    <% @results.each do |i| %>
-     	{location:new google.maps.LatLng(<%= i['geometry']['location']['lat'] %> , <%= i['geometry']['location']['lng'] %> )},
-    <% end %>
-	], //　途中経路
-    travelMode: google.maps.DirectionsTravelMode.WALKING // 車で
+      origin:start, // 出発地
+      destination:end, // 目的地
+      waypoints:[
+        <% @results.each do |i| %>
+          {location:new google.maps.LatLng(<%= i['geometry']['location']['lat'] %> , <%= i['geometry']['location']['lng'] %> )},
+        <% end %>
+      ], //　途中経路
+      travelMode: google.maps.DirectionsTravelMode.WALKING // 車で
     };
     directionsService.route(request, function(response, status) {
       if (status == google.maps.DirectionsStatus.OK) {
-      directionsDisplay.setDirections(response); // 描画
+        directionsDisplay.setDirections(response); // 描画
       }
     });
-    
   };
-  
 
-
-    </script>
-    
+</script>
 </head>
+
 <body onload="initialize()">
-	
-		
-    <div class="container-narrow">
 
-      <div class="masthead text-center">
-        <%= image_tag('asudoko_logo.png') %>
-      </div>
+  <div class="container-narrow">
 
-      <hr>
+    <div class="masthead text-center">
+      <%= image_tag('asudoko_logo.png') %>
+    </div>
 
-      <div class="jumbotron">
-        <div id="map" style="width: 700px; height: 400px;"></div> 
-      </div>
+    <hr>
 
-      <hr>
+    <div class="jumbotron">
+      <div id="map" style="width: 700px; height: 400px;"></div> 
+    </div>
 
-      <div class="jumbotron">
-<table class="table">
-  <thead>
-    <tr>
-      <th>No.</th>
-      <th>名前</th>
-      <th>住所</th>
-    </tr>
-  </thead>
-  <tbody>
+    <hr>
+
+    <div class="jumbotron">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>No.</th>
+            <th>名前</th>
+            <th>住所</th>
+          </tr>
+        </thead>
+        <tbody>
   
-<% @results.each_with_index do |i,k| %>
-  <% if k%2 == 0 %>
-    <tr class="success">
-  <% else %>
-    <tr class="warning">
-  <% end %>
-    <td><%= k + 1 %></td>
-    <td><%= i['name'] %></td>
-    <td><%= i['vicinity'] %></td>
-  </tr>
-<% end %>
-  </tbody>
-</table>
+          <% @results.each_with_index do |i,k| %>
+            <% if k%2 == 0 %>
+              <tr class="success">
+            <% else %>
+              <tr class="warning">
+            <% end %>
+              <td><%= k + 1 %></td>
+              <td><%= i['name'] %></td>
+              <td><%= i['vicinity'] %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
 
-<a class="btn btn-large btn-warning" href="<%= root_url(:only_path => false) %>">戻る</a>
+    <hr>
+    
+    <% mapurl = "https://maps.google.co.jp/maps?saddr=" + current_lat.to_s + "," + current_lng.to_s + "&daddr=" %>
+    <% @results.each do |i| %>
+      <% mapurl = mapurl + i['geometry']['location']['lat'].to_s + "," + i['geometry']['location']['lng'].to_s + "+to:" %>
+    <% end %>
+    <% mapurl = mapurl + current_lat.to_s + "," + current_lng.to_s + "&hl=ja&dirflg=w" %>
 
-      </div>
+    <div class="jumbotron text-left">
+      <a class="btn btn-link btn-warning" href="<%= mapurl %>" target="_blank">結果をGoogleルート検索で見る</a>
+    </div>
 
-      <hr>
+    <hr>
+      
+    <div class="jumbotron text-left">
+      <p>結果をTwitterでつぶやく</p>
+      <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://asudoko.herokuapp.com/" data-text="明日ここ行く！ <%= mapurl %>" data-lang="ja" data-count="none" data-hashtags="asudoko">ツイート</a>
+      <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+      
+    </div>
 
-      <div class="footer">
-        <p>&copy; kanorimon 2013</p>
-      </div>
+    <hr>
 
-    </div> <!-- /container -->
+    <div class="jumbotron">
+      <a class="btn btn-large btn-warning" href="<%= root_url(:only_path => false) %>">もう一回？</a>
+    </div>
+
+    <hr>
+
+    <div class="footer">
+      <p>&copy; kanorimon 2013</p>
+    </div>
+
+  </div> <!-- /container -->
